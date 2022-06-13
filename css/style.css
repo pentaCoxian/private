@@ -1,0 +1,109 @@
+html{
+    font-family: 'M PLUS 2', sans-serif;
+    background-color: #E4DFDA;
+  }
+body{
+    margin: 0px;
+}
+.site-title{
+    font-size: 24px;
+    font-family: 'M PLUS 1', sans-serif;
+    font-weight: bold;
+    width: max-content;
+    margin: 1em auto 0 auto;
+}
+.container{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1em;
+    width:90%;
+}
+
+.text{
+    vertical-align: middle;
+    padding: 0.5em;
+}
+.search{
+    margin-left: auto;
+    margin-right: auto;
+    width:70%;
+    align-items: center;
+    display: flex;
+    align-content: center;
+    border: #48A9A6 solid 1px;
+    margin-top: 2em;    
+    margin-bottom: 5em;
+}
+
+.main-search{
+    border: none;
+    height: 3.2em;
+    width:100%;
+}
+
+.search-button{
+    background-color: rgb(0,90,187);
+    border: none;
+    color: white;
+    height: 3em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    width:20%;
+    transition-duration: 0.4s;
+}
+.search-button:hover {
+    background-color: #4CAF50; /* Green */
+    color: white;
+  }
+
+.result{
+    width:80%;
+    margin: 1em auto 0 auto;
+}
+.result-main{
+    width: 100%;
+    background-color: #005ABB;
+    color: white;
+    /*padding: 0.5em 1em 0.5em 1em;*/
+    margin-left: auto;
+    margin-right: auto;
+}
+.title{
+    font-size: 20px;
+    font-family: 'M PLUS 1', sans-serif;
+    font-weight: 400;
+    padding:7px 12px 4px 12px;
+
+}
+.details{
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 15px;
+    font-family: 'M PLUS 1', sans-serif;
+    font-weight: 400;
+    padding:0em 12px 10px 12px;
+}
+.details div{
+    margin-right: 0.4em;
+}
+
+@media screen and (max-width: 940px) {
+    .container {
+      width:100%;}
+    .search{
+        width:90%;
+    }
+  }
+
+@media screen and (max-width: 720px) {
+    .result{
+        width: 100%;
+    }
+    .flex-break{
+        flex-basis: 100%;
+        height:0;
+    }
+    
+}
