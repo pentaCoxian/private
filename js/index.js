@@ -27,11 +27,11 @@ function searchFunc(e){
     let searchTerm = document.getElementById("search").value.replace(" ","+");
     let gurl = ''
     if (document.getElementById("switch").checked === true){
-        gurl = `http://43.235.1.53/devpython-sub?${searchTerm}`;
+        gurl = `http://icu-syllabus.com/devpython-sub?${searchTerm}`;
     }else{
-        gurl = `http://43.235.1.53/devpython?${searchTerm}`;
+        gurl = `http://icu-syllabus.com/devpython?${searchTerm}`;
     };
-    fetch(gurl,{method:'GET',mode:"no-cors"}).then(response => response.json()).then(data => insertFromJsonList(data));
+    fetch(gurl,{method:'GET'}).then(response => response.json()).then(data => insertFromJsonList(data));
 
     console.log(gurl);
 
@@ -39,6 +39,11 @@ function searchFunc(e){
 
 function insertFromJsonList(jsonList){
     console.log(jsonList);
+    let target = document.getElementsByClassName("result");
+    for (let i = target.length -1;i >= 0;--i){
+        target[i].remove();
+    }
+
     let times = 0;
     for( i = 0; i <jsonList.length;i++){
         json = jsonList[i];
@@ -58,8 +63,9 @@ function insertFromJsonList(jsonList){
                 </div>
             </div>
         `;
+        
+        document.getElementById("target").insertAdjacentHTML("beforeend", markup);
 
-        document.getElementById("container").insertAdjacentHTML("beforeend", markup);
         console.log(times);
         times ++;
     }

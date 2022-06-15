@@ -6,34 +6,42 @@ import certifi
 import urllib.parse
 
 def application(environ, start_response):
-    headers = [('Content-Type', 'application/json')]
+    originSite = 'icu-syllabus.com'
+    headers = [('Content-Type', 'application/json; charset=utf-8'),('Access-Control-Allow-Origin',originSite)]
     start_response('200 OK', headers)
 
     dbname = get_database()
     cols = dbname["courseOfferings"]
-    testStr = str(urllib.parse.unquote(environ['QUERY_STRING']))
-    if testStr == '':
-        testStr = ' '
+    inputwords = str(urllib.parse.unquote(environ['QUERY_STRING'])).split("+")
+    
+    if inputwords[0] == '':
+        inputwords[0] = ' '
+
     pipeline = [
   {
     '$search': {
       'index': 'courseSearchIndex',
-      'text': {
-        'query': testStr,
-        'path': {
-          'wildcard': '*'
-        }
+      'compound':{
+          'must': [ {
+                'text': {
+                    'query': inputwords, 
+                    'path': { 'wildcard': '*' }
+                        }
+                    }
+                ]
       }
-    }
-  }
+    }},
+    {'$addFields':{'score':{'$meta':'searchScore'}}},
+    {'$match':{'score': {'$gt': 2}}}
 ]
 
-
+    
     mydoc = cols.aggregate(pipeline)
     resList = []
     for x in mydoc:
         resList.append(x)
     res = json.dumps(resList,ensure_ascii=False).encode('utf-8')
+    # res = json.dumps(environ).encode('utf-8') #print environ
     return [res]
 
 
