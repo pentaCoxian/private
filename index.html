@@ -12,12 +12,21 @@
     <title>Course Search</title>
 </head>
 <body>
+    <div class="headder">
+        <div class="mode-check" style="display:flex">
+            <label>
+                Syllabus search mode:
+                <input type="checkbox" name="courseSearch" id="switch">
+            </label>
+        </div>
+    </div>
+
     <div class="site-title">ICU B-Syllabus</div>
     <div class="container" id="container">
         <div class="search">
             <input type="text" class="main-search" id="search">
             <button class="search-button" id="searchButton">Search</button>
-            <input type="checkbox" name="courseSearch" id="switch">
+            
         </div>
         <div class="target" id="target"></div>
         

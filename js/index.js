@@ -1,22 +1,3 @@
-const dummyData = {
-    "_id":"11211",
-    "rgno":"11211",
-    "season":"Spring",
-    "ay":"2022",
-    "course_no":"ISC344",
-    "old_cno":"",
-    "lang":"J",
-    "section":"",
-    "title_e":"Topics in Web Engineering ",
-    "title_j":"Web工学特論",
-    "schedule":"5/F,(6/F,7/F)",
-    "room":"SH-N307",
-    "comment":"Face to Face",
-    "maxnum":"(100)",
-    "instructor":"KOBAYASHI, Aki",
-    "unit":"2"
-}
-
 window.onload = function(){
     let searchButton = document.getElementById("searchButton");
     searchButton.addEventListener('click',()=>{searchFunc();});
@@ -24,7 +5,7 @@ window.onload = function(){
 // a
 function searchFunc(e){
     console.log("fired");
-    let searchTerm = document.getElementById("search").value.replace(" ","+");
+    let searchTerm = document.getElementById("search").value.trim().replace(" ","+");
     let gurl = ''
     if (document.getElementById("switch").checked === true){
         gurl = `http://icu-syllabus.com/devpython-sub?${searchTerm}`;
