@@ -14,26 +14,31 @@ def application(environ, start_response):
 
     # connect to mongodb
     dbname = get_database()
-    cols = dbname["courseSyllabus"]
-    
+
     # get params from url(also pharse encoded japanese)
     inputwords = str(urllib.parse.unquote(environ['QUERY_STRING'])).split("+")
+
+    # tune for match (needs tuning)
     minMatch = len(inputwords) -1
+
     # make Qaurry from input (if theres no parameters, make it a whitespace to avoid errors)
     for i in range(len(inputwords)):
         if inputwords[i] == '':
             inputwords[i] = ' '
-    pipeline = makeQuery(inputwords[0],inputwords[1:],minMatch)
+    pipeline = makeQuery(inputwords[0],inputwords[1:])
+
     # set target and aggregate
+    cols = dbname["courseSyllabus"]
     mydoc = cols.aggregate(pipeline)
 
     # convert to list
-    tmpList = [] #should result in list of dict like elments?
+    resList = [] #should result in list of dict like elments?
     for x in mydoc:
-        tmpList.append(x)
+        resList.append(x)
+    
+
 
     # convert to json
-    resList = extractDataFromList(tmpList)
     res = json.dumps(resList,ensure_ascii=False).encode('utf-8')
     return [res]
 
@@ -53,7 +58,7 @@ def get_database():
 def makeFilter(word):
     return {'text': {'query': word, 'path': {'wildcard': '*'}}}
 
-def makeQuery(master,words = 'a',minMatch=0):
+def makeQuery(master,words = ' '):
     pipeline = [
     {
         '$search': {
@@ -72,11 +77,11 @@ def makeQuery(master,words = 'a',minMatch=0):
                 'should': [
                     # Generated filter goes inside here
                 ], 
-                'minimumShouldMatch': minMatch
+                'minimumShouldMatch': 1
             },
             'highlight':{'path':{'wildcard':'*'}}
         }
-    },{'$limit':100},{
+    },{'$limit':5},{
         '$project': {
             '_id': 0, 
             'regno':1,
@@ -90,45 +95,4 @@ def makeQuery(master,words = 'a',minMatch=0):
     for word in words:
         target.append(makeFilter(word))
     return pipeline
-
-
-def extractDataFromList(argList):
-    returnList =[]
-    for i in range(len(argList)):
-        
-        elmDict = argList[i] # this would be {'regno':'regnostring','highlights':[highlights],'score':number}
-        storageDict = {'regno':elmDict['regno'],'score':elmDict['score'],'sumscore':0,'sumlabel':[],'results':[]}
-
-
-        for x in elmDict['highlights']:
-            storageDict['sumlabel'] += [x['path']]
-            storageDict['sumscore'] += x['score']
-            concatStr = ""
-            for j in range(len(x['texts'])):# x['texts'] should return [{'value':str},{'value':str},{'value':str}]  
-                if x['texts'][j]['type'] == "hit":
-                    concatStr += '<span style=\"color:red\">'+x['texts'][j]['value']+'</span>'
-                else:
-                    concatStr += '<span>'+x['texts'][j]['value']+'</span>'
-            storageDict['results'] += [('...'+concatStr+'...<br>')]
-        returnList.append(storageDict) # returns list
-
-    # what we want to return
-    #[{
-    #    'regno':'something',
-    #    'labels':[labels,labels,labels],
-    #    'results':['before<h3>hit</h3>after','before<h3>hit</h3>after','before<h3>hit</h3>after']
-    #},{
-    #    'regno':'something',
-    #    'labels':[labels,labels,labels],
-    #    'results':['before<h3>hit</h3>after','before<h3>hit</h3>after','before<h3>hit</h3>after']
-    #},{
-    #    'regno':'something',
-    #    'labels':[labels,labels,labels],
-    #    'results':['before<h3>hit</h3>after','before<h3>hit</h3>after','before<h3>hit</h3>after']
-    #},{
-    #    'regno':'something',
-    #    'labels':[labels,labels,labels],
-    #    'results':['before<h3>hit</h3>after','before<h3>hit</h3>after','before<h3>hit</h3>after']        
-    #}]
-    return returnList
 

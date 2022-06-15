@@ -6,6 +6,7 @@ window.onload = function(){
 function searchFunc(e){
     console.log("fired");
     let searchTerm = document.getElementById("search").value.trim().replace(" ","+");
+    console.log(searchTerm)
     let gurl = ''
     if (document.getElementById("switch").checked === true){
         gurl = `http://icu-syllabus.com/devpython-sub?${searchTerm}`;

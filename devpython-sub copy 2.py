@@ -23,7 +23,7 @@ def application(environ, start_response):
     for i in range(len(inputwords)):
         if inputwords[i] == '':
             inputwords[i] = ' '
-    pipeline = makeQuery(inputwords[0],inputwords[1:],minMatch)
+    pipeline = makeQuery(inputwords[0],inputwords[1:])
     # set target and aggregate
     mydoc = cols.aggregate(pipeline)
 
@@ -53,7 +53,7 @@ def get_database():
 def makeFilter(word):
     return {'text': {'query': word, 'path': {'wildcard': '*'}}}
 
-def makeQuery(master,words = 'a',minMatch=0):
+def makeQuery(master,words = 'a'):
     pipeline = [
     {
         '$search': {
@@ -72,7 +72,7 @@ def makeQuery(master,words = 'a',minMatch=0):
                 'should': [
                     # Generated filter goes inside here
                 ], 
-                'minimumShouldMatch': minMatch
+                'minimumShouldMatch': 1
             },
             'highlight':{'path':{'wildcard':'*'}}
         }

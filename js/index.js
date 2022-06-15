@@ -9,23 +9,19 @@ function searchFunc(e){
     let gurl = ''
     if (document.getElementById("switch").checked === true){
         gurl = `http://icu-syllabus.com/devpython-sub?${searchTerm}`;
+        fetch(gurl,{method:'GET'}).then(response => response.json()).then(data => insertFromJsonListSub(data));
     }else{
         gurl = `http://icu-syllabus.com/devpython?${searchTerm}`;
+        fetch(gurl,{method:'GET'}).then(response => response.json()).then(data => insertFromJsonList(data));
     };
-    fetch(gurl,{method:'GET'}).then(response => response.json()).then(data => insertFromJsonList(data));
-
     console.log(gurl);
-
 }
 
 function insertFromJsonList(jsonList){
-    console.log(jsonList);
     let target = document.getElementsByClassName("result");
     for (let i = target.length -1;i >= 0;--i){
         target[i].remove();
     }
-
-    let times = 0;
     for( i = 0; i <jsonList.length;i++){
         json = jsonList[i];
         let markup = `
@@ -44,25 +40,32 @@ function insertFromJsonList(jsonList){
                 </div>
             </div>
         `;
-        
         document.getElementById("target").insertAdjacentHTML("beforeend", markup);
-
-        console.log(times);
-        times ++;
     }
-    console.log('exit');
 }
 
 function insertFromJsonListSub(jsonList){
-    let times = 0;
-    for( i = 0; i <jsonList.length;i++){
-        json = jsonList[i];
-        let markup = json._id;
-        
-
-        document.getElementById("container").insertAdjacentHTML("beforeend", markup);
-        console.log(times);
-        times ++;
+    //delete previous results
+    let target = document.getElementsByClassName("result");
+    for (let i = target.length -1;i >= 0;--i){
+        target[i].remove();
     }
-    console.log('exit');
+
+    for( i = 0; i <jsonList.length;i++){
+        json1 = jsonList[i];
+        
+        markup = `
+        <div class="result">
+            <p>${json1.regno}</p>
+            <div>${json1.results.join('')}</div>
+            <p>----------------------------</p>
+        </div>
+        
+        `
+        document.getElementById("target").insertAdjacentHTML("beforeend", markup);
+    }
+}
+
+function getIdAndNameRelation(){
+
 }
