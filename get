@@ -1,0 +1,12 @@
+{
+  'index': 'syllabusSearchIndex', 
+  'compound': {
+    'must': [{
+      'text': {
+        'query': 'network', 
+        'path': {'wildcard': '*'}
+        }
+    }]
+  },
+  'highlight':{'path':{'wildcard':'*'}}
+}

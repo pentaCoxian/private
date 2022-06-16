@@ -9,7 +9,7 @@ import urllib.parse
 def application(environ, start_response):
     # send back respond headders, selecting type json and also allowing http_host of icu-syllabus.com to use this script with out triggering cors policy
     originSite = 'icu-syllabus.com'
-    headers = [('Content-Type', 'application/json; charset=utf-8'),('Access-Control-Allow-Origin',originSite)]
+    headers = [('Content-Type', 'application/json; charset=utf-8'),('Access-Control-Allow-Origin','*')]
     start_response('200 OK', headers)
 
     # connect to mongodb
@@ -76,12 +76,20 @@ def makeQuery(master,words = 'a',minMatch=0):
             },
             'highlight':{'path':{'wildcard':'*'}}
         }
-    },{'$limit':100},{
+    },{'$limit':50},{
+        '$lookup':{
+            'from': 'courseOfferings',
+            'localField': '_id',
+            'foreignField': '_id',
+            'as': 'mera'
+        }
+    },{
         '$project': {
             '_id': 0, 
             'regno':1,
             'highlights': { '$meta': 'searchHighlights' },
-            'score': {'$meta': 'searchScore'}
+            'score': {'$meta': 'searchScore'},
+            'mera':1
         }
     }#,{'$match':{'score':{'$gt':2.5}}} #more for japanese but needs tuning
     ]
@@ -97,12 +105,15 @@ def extractDataFromList(argList):
     for i in range(len(argList)):
         
         elmDict = argList[i] # this would be {'regno':'regnostring','highlights':[highlights],'score':number}
-        storageDict = {'regno':elmDict['regno'],'score':elmDict['score'],'sumscore':0,'sumlabel':[],'results':[]}
-
+        storageDict = {
+            'regno':elmDict['regno'],
+            'course_no':elmDict['mera'][0]['course_no'],
+            'title':elmDict['mera'][0]['title_e'],
+            'score':elmDict['score'],
+            'results':[]
+        }
 
         for x in elmDict['highlights']:
-            storageDict['sumlabel'] += [x['path']]
-            storageDict['sumscore'] += x['score']
             concatStr = ""
             for j in range(len(x['texts'])):# x['texts'] should return [{'value':str},{'value':str},{'value':str}]  
                 if x['texts'][j]['type'] == "hit":

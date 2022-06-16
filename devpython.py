@@ -7,7 +7,7 @@ import urllib.parse
 
 def application(environ, start_response):
     originSite = 'icu-syllabus.com'
-    headers = [('Content-Type', 'application/json; charset=utf-8'),('Access-Control-Allow-Origin',originSite)]
+    headers = [('Content-Type', 'application/json; charset=utf-8'),('Access-Control-Allow-Origin','*')]
     start_response('200 OK', headers)
 
     dbname = get_database()

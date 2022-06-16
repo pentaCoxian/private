@@ -5,6 +5,12 @@ html{
 body{
     margin: 0px;
 }
+p{
+    margin-bottom: 1em;
+    background-color: rgb(0,90,187);
+    color: white;
+    font-size: 1em;
+}
 .site-title{
     font-size: 24px;
     font-family: 'M PLUS 1', sans-serif;

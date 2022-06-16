@@ -8,10 +8,12 @@ function searchFunc(e){
     let searchTerm = document.getElementById("search").value.trim().replace(" ","+");
     let gurl = ''
     if (document.getElementById("switch").checked === true){
-        gurl = `http://icu-syllabus.com/devpython-sub?${searchTerm}`;
+        gurl = `https://icu-syllabus.com/devpython-sub?${searchTerm}`;
+        //backup DDNS gurl = `http://pentacoxian.com/devpython-sub?${searchTerm}`;
         fetch(gurl,{method:'GET'}).then(response => response.json()).then(data => insertFromJsonListSub(data));
     }else{
-        gurl = `http://icu-syllabus.com/devpython?${searchTerm}`;
+        gurl = `https://icu-syllabus.com/devpython?${searchTerm}`;
+        //backup DDNS gurl = `http://pentacoxian.com/devpython?${searchTerm}`;
         fetch(gurl,{method:'GET'}).then(response => response.json()).then(data => insertFromJsonList(data));
     };
     console.log(gurl);
@@ -53,10 +55,9 @@ function insertFromJsonListSub(jsonList){
 
     for( i = 0; i <jsonList.length;i++){
         json1 = jsonList[i];
-        
         markup = `
         <div class="result">
-            <p>${json1.regno}</p>
+            <p>Title:${json1.title}, Reg:${json1.regno}, ID:${json1.course_no}</p>
             <div>${json1.results.join('')}</div>
             <p>----------------------------</p>
         </div>
