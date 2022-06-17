@@ -20,10 +20,12 @@ function searchFunc(e){
 }
 
 function insertFromJsonList(jsonList){
+    //delete previous results
     let target = document.getElementsByClassName("result");
     for (let i = target.length -1;i >= 0;--i){
         target[i].remove();
     }
+
     for( i = 0; i <jsonList.length;i++){
         json = jsonList[i];
         let markup = `
@@ -57,9 +59,13 @@ function insertFromJsonListSub(jsonList){
         json1 = jsonList[i];
         markup = `
         <div class="result">
-            <p>Title:${json1.title}, Reg:${json1.regno}, ID:${json1.course_no}</p>
-            <div>${json1.results.join('')}</div>
-            <p>----------------------------</p>
+            <div class="syWrapper">
+                <div class="syRegno">Reg:${json1.regno}</div>
+                <div class="syHeadder">${json1.course_no}: ${json1.title_e} / ${json1.title_j}</div>
+            </div>
+
+            <div>${json1.results.join('\n')}</div>
+            <div class="sySeparator">----------------------------</div>
         </div>
         
         `

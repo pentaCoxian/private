@@ -1,12 +1,9 @@
 import json
-import re
 from pymongo import MongoClient
 import bson
 import pymongo
 import certifi
-from urllib.parse import quote
 import urllib.parse
-
 
 # wsgi entry point
 def application(environ, start_response):
@@ -116,30 +113,15 @@ def extractDataFromList(argList):
             'score':elmDict['score'],
             'results':[]
         }
-        url = 'https://campus.icu.ac.jp/public/ehandbook/PreviewSyllabus.aspx?regno='+elmDict['regno']+'&year=2022&term='+elmDict['regno'][0]
+
         for x in elmDict['highlights']:
             concatStr = ""
-            flag = True
             for j in range(len(x['texts'])):# x['texts'] should return [{'value':str},{'value':str},{'value':str}]  
-                param = '#:~:text='
-                target = x['texts']
-                # generate link first
-                # https://example.com#:~:text=prefix-,startText,endText,-suffix
-                if target[j]['type'] == 'hit':
-                    try:
-                        param += conv(target[j-1]['value'].strip(),-1)+quote(target[j]['value'].strip())+conv(target[j+1]['value'].strip(),0)
-                    except IndexError:
-                        try:
-                            param += quote(target[j]['value'].strip())+conv(target[j+1]['value'].strip(),0)
-                        except IndexError:
-                            param += conv(target[j-1]['value'].strip(),-1)+quote(target[j]['value'].strip())
-                    # join the parameters to make a string with href
-                    concatStr += '<a href="'+url+param+'">'+target[j]['value']+'</a>'
+                if x['texts'][j]['type'] == "hit":
+                    concatStr += '<span style=\"color:red\">'+x['texts'][j]['value']+'</span>'
                 else:
-                    # if not a hit word, just add to string
-                    #concatStr += '<span>'+target[j]['value']+'</span>'
-                    concatStr += '<span>'+target[j]['value'].lstrip('　').lstrip('.,')+'</span>'
-            storageDict['results'] += ['<div class ="syAb">'+concatStr+'...</div><br>']
+                    concatStr += '<span>'+x['texts'][j]['value']+'</span>'
+            storageDict['results'] += [('<div class ="syAb">...'+concatStr+'...</div><br>')]
         returnList.append(storageDict) # returns list
 
     # what we want to return
@@ -162,12 +144,3 @@ def extractDataFromList(argList):
     #}]
     return returnList
 
-def conv(targetItem,order):
-    input = re.split('[\',;/\-、，(, )]',targetItem)[order]#[\'(, ),;/-、，(\- )]
-    ret = ''
-    if input != '':
-        if order == -1:
-            ret = quote(input) + '-,'
-        else:
-            ret = ',-' + quote(input)
-    return ret
