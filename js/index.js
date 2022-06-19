@@ -20,12 +20,14 @@ function searchFunc(e){
 }
 
 function insertFromJsonList(jsonList){
-    //delete previous results
+    // delete previous results
+    // loop through the elements from the back since the returned list is a live list and will get updated as you delete elements, resulting in a index number mismatch
     let target = document.getElementsByClassName("result");
     for (let i = target.length -1;i >= 0;--i){
         target[i].remove();
     }
 
+    // insert html elements with the values from the recived json
     for( i = 0; i <jsonList.length;i++){
         json = jsonList[i];
         let markup = `
@@ -44,6 +46,8 @@ function insertFromJsonList(jsonList){
                 </div>
             </div>
         `;
+        // use insertAdjacentHTML so that the script does not loose track of the DOM
+        // if you use insert inside a loop, it will result in loss of DOM status and the script won't run after that
         document.getElementById("target").insertAdjacentHTML("beforeend", markup);
     }
 }
@@ -54,7 +58,7 @@ function insertFromJsonListSub(jsonList){
     for (let i = target.length -1;i >= 0;--i){
         target[i].remove();
     }
-
+    console.log()
     for( i = 0; i <jsonList.length;i++){
         json1 = jsonList[i];
         markup = `

@@ -3,6 +3,11 @@
 For Topics in Web Engineering Final.
 This repo is for server side script and files for serving to client.
 
+## Result
+The final product can be seen here: https://icu-syllabus.com
+This is hosted in my home server and is proxyed through cloudflare.
+
+## Files
 The `devpython.py` file is for searching the course offerings, and the `devpython-sub.py` is used for searching the syllabus. For each of the scripts, when accessed by a browser, it will return a json object containing the results, along with basic html(was a bit short in time so had to hardcode it in in python). The index.js file will send a GET request to that url and upon reciving the json, will display the objects as html elements.
 
 ## INSTALL
@@ -91,6 +96,6 @@ For Cross Origin Resource Shareing, change the `originSite` to the hostname of t
     originSite = 'example.com' # or '*'
     headers = [('Content-Type', 'application/json; charset=utf-8'),('Access-Control-Allow-Origin',originSite)]
 ```
-Also, the mongodb access token has been left in but as the access will be limited by ip addresses, you might need to setup your own mongodb atlas instance and make the database using the syllabusscrape scripts.
+**Also, the mongodb access token has been left in but as the access will be limited by ip addresses, you might need to setup your own mongodb atlas instance and make the database using the syllabusscrape scripts.**
 
 These packeges should be all but as there is no db access yet, this still will probablly result in 500 error status, see `/var/log/apache2/error.log` for details.

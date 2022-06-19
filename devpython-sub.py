@@ -27,11 +27,12 @@ def application(environ, start_response):
     for i in range(len(inputwords)):
         if inputwords[i] == '':
             inputwords[i] = ' '
+    # pass in arguments to query
     pipeline = makeQuery(inputwords[0],inputwords[1:],minMatch)
     # set target and aggregate
     mydoc = cols.aggregate(pipeline)
 
-    # convert to list
+    # convert answer to list
     tmpList = [] #should result in list of dict like elments?
     for x in mydoc:
         tmpList.append(x)
@@ -48,15 +49,16 @@ def get_database():
     import certifi
     ca = certifi.where()
 
+    # connect to db, select collection icu
     CONNECTION_STRING = "mongodb+srv://python:lolpython556@pythondev.etdrtaj.mongodb.net/pythondev"
     client = MongoClient(CONNECTION_STRING, tlsCAFile=ca)
-
     return client['icu']
 
 
 def makeFilter(word):
     return {'text': {'query': word, 'path': {'wildcard': '*'}}}
 
+# make query pipleline from arguments
 def makeQuery(master,words = 'a',minMatch=0):
     pipeline = [
     {
@@ -103,7 +105,7 @@ def makeQuery(master,words = 'a',minMatch=0):
         target.append(makeFilter(word))
     return pipeline
 
-
+# Read results and reshape to 
 def extractDataFromList(argList):
     returnList =[]
 
