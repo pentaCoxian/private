@@ -5,9 +5,11 @@ import pymongo
 import certifi
 import urllib.parse
 
+# wsgi entry point
+# Accessed by https://icu-syllabus.com/python-file-name.py
 def application(environ, start_response):
     originSite = 'icu-syllabus.com'
-    headers = [('Content-Type', 'application/json; charset=utf-8'),('Access-Control-Allow-Origin','*')]
+    headers = [('Content-Type', 'application/json; charset=utf-8'),('Access-Control-Allow-Origin',originSite)]
     start_response('200 OK', headers)
 
     dbname = get_database()

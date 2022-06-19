@@ -60,6 +60,7 @@ def makeFilter(word):
     return {'text': {'query': word, 'path': {'wildcard': '*'}}}
 
 def makeQuery(master,words = ' '):
+    # query 
     pipeline = [
     {
         '$search': {
@@ -91,8 +92,9 @@ def makeQuery(master,words = ' '):
         }
     }#,{'$match':{'score':{'$gt':2.5}}} #more for japanese but needs tuning
     ]
-    target = pipeline[0]['$search']['compound']['should']
 
+    # add in additional arguments
+    target = pipeline[0]['$search']['compound']['should']
     for word in words:
         target.append(makeFilter(word))
     return pipeline
@@ -100,8 +102,8 @@ def makeQuery(master,words = ' '):
 
 def extractDataFromList(argList):
     returnList =[]
+
     for i in range(len(argList)):
-        
         elmDict = argList[i] # this would be {'regno':'regnostring','highlights':[highlights],'score':number}
         storageDict = {'regno':elmDict['regno'],'score':elmDict['score'],'sumscore':0,'sumlabel':[],'results':[]}
 
@@ -136,5 +138,5 @@ def extractDataFromList(argList):
     #    'labels':[labels,labels,labels],
     #    'results':['before<h3>hit</h3>after','before<h3>hit</h3>after','before<h3>hit</h3>after']        
     #}]
-    return returnList
+    return argList
 
