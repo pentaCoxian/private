@@ -2,12 +2,17 @@
 
 For Topics in Web Engineering Final.
 This repo is for server side script and files for serving to client.
+
+The `devpython.py` file is for searching the course offerings, and the `devpython-sub.py` is used for searching the syllabus. For each of the scripts, when accessed by a browser, it will return a json object containing the results, along with basic html(was a bit short in time so had to hardcode it in in python). The index.js file will send a GET request to that url and upon reciving the json, will display the objects as html elements.
+
+## INSTALL
+
 The enviroment used was
 - ubuntu 22.04 LTS
 - Apache/2.4.52
 - Python 3.10.4
 
-## INSTALL
+copy this repo to /var/www/html
 
 Install Apache2 along with Apache2-dev(needed for mod_wsgi) and enable/start apache.
 ```
@@ -28,4 +33,24 @@ Find where pip3 installed the package and inside that mod_wsgi folder, under ser
 
 To load the module to apache, `sudo nano /etc/apache2/mods-available/wsgi.load` and inside, write `LoadModule wsgi_module /usr/lib/apache2/modules/mod_wsgi-py310.cpython-310-x86_64-linux-gnu.so`. Now a2enmod should recognise mod_wsgi, so `sudo a2enmod wsgi`. Then restart apache2 by `sudo systemctl restart apache2`.
 
-Next, setup apache config file to run wsgi. apache config files has changed names but at the time of writing, it was `/etc/apache2/apache2.conf`.
+Next, setup apache config file to run wsgi. apache config files has changed names but at the time of writing, it was `/etc/apache2/apache2.conf`. 
+
+As we are in the config file we might as well do the following: 
+Find the section marked below and delete the text Indexes(for security reasons?)
+```
+<Directory /var/www/>
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+</Directory>
+```
+
+After that, we'll add the pass of the wsgi script that will be executed when the url is accessed. Inside the config file, add the following:
+```
+    WSGIScriptAlias /path-of-url /var/www/html/wsgi-file.py
+```
+This is `WSGIScriptAlias` followed by the url path and then the path to the corresponding wsgi script file. In this case we want to run the script `devpython.py` and `devpython-sub.py`
+
+
+
+
