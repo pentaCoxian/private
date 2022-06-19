@@ -37,10 +37,10 @@ To load the module to apache, `sudo nano /etc/apache2/mods-available/wsgi.load` 
 ```
 Now a2enmod should recognise mod_wsgi, so `sudo a2enmod wsgi`. Then restart apache2 by `sudo systemctl restart apache2`.
 
+
 Next, setup apache config file to run wsgi. apache config files has changed names but at the time of writing, it was `/etc/apache2/apache2.conf`. 
 
-As we are in the config file we might as well do the following: 
-Find the section marked below and delete the text Indexes(for security reasons?)
+As we are in the config file we might as well find the section marked below and delete the text Indexes(for security reasons?)
 ```
 <Directory /var/www/>
         Options Indexes FollowSymLinks
@@ -51,10 +51,30 @@ Find the section marked below and delete the text Indexes(for security reasons?)
 
 After that, we'll add the pass of the wsgi script that will be executed when the url is accessed. Inside the config file, add the following:
 ```
-    WSGIScriptAlias /path-of-url /var/www/html/wsgi-file.py
+    WSGIScriptAlias /wsgi /var/www/html/wsgi-test.py
 ```
-This is `WSGIScriptAlias` followed by the url path and then the path to the corresponding wsgi script file. In this case we want to run the script `devpython.py` and `devpython-sub.py`
+This is `WSGIScriptAlias` followed by the url path and then the path to the corresponding wsgi script file. 
+For testing the setup we'll write a simple hello world script from the official docs. 
+`sudo touch /var/www/html/wsgi-test.py` and then copy in the following
+```
+def application(environ, start_response):
+    status = '200 OK'
+    output = 'Hello World!\n'
+    response_headers = [('Content-type', 'text/plain'),
+                        ('Content-Length', str(len(output)))]
+    start_response(status, response_headers)
+    return [output]
+```
+Save the file and then restart apache2. After restarting, run `curl localhost/wsgi` and it should output `Hello World!`.
+As for the setup for mod_wsgi, this should be all.
 
+## Setup for running devpython.py and devpython-sub.py
 
+As we want to run the script `devpython.py` and `devpython-sub.py` so we will need to add some more configs.
 
+In `apache.conf`, add the following
+```
+    WSGIScriptAlias /devpython /var/www/html/devpython.py
+    WSGIScriptAlias /devpython-sub /var/www/html/devpython-sub.py
+```
 
