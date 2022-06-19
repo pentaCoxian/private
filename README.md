@@ -2,7 +2,7 @@
 
 For Topics in Web Engineering Final.
 This repo is for server side script and files for serving to client.
-
+note:**Also, the mongodb access token has been left in but as the access will be limited by ip addresses, you might need to setup your own mongodb atlas instance and make the database using the syllabusscrape scripts.**
 ## Result
 The final product can be seen here: https://icu-syllabus.com
 This is hosted in my home server and is proxyed through cloudflare.
