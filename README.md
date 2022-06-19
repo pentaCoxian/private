@@ -66,7 +66,7 @@ def application(environ, start_response):
     return [output]
 ```
 Save the file and then restart apache2. After restarting, run `curl localhost/wsgi` and it should output `Hello World!`.
-As for the setup for mod_wsgi, this should be all.
+As for the setup for mod_wsgi, this should be all!
 
 ## Setup for running devpython.py and devpython-sub.py
 
@@ -77,4 +77,20 @@ In `apache.conf`, add the following
     WSGIScriptAlias /devpython /var/www/html/devpython.py
     WSGIScriptAlias /devpython-sub /var/www/html/devpython-sub.py
 ```
+This will enable running of the two scripts but likely accessing the url at this point will resut in a `500 internal server config error`. This is because of the missing python packages needed to run this script.
 
+The packeges needed for serverside are:
+- dns-python
+- pymongo
+- certifi
+make shure that these are installed and can be accessed from the script.
+
+You will need to modify soma parts of the script such as the cors headders and mongo db access strings and such.
+For Cross Origin Resource Shareing, change the `originSite` to the hostname of the server sending the files / or allow all by setting `'*'` for testing.
+```
+    originSite = 'example.com' # or '*'
+    headers = [('Content-Type', 'application/json; charset=utf-8'),('Access-Control-Allow-Origin',originSite)]
+```
+Also, the mongodb access token has been left in but as the access will be limited by ip addresses, you might need to setup your own mongodb atlas instance and make the database using the syllabusscrape scripts.
+
+These packeges should be all but as there is no db access yet, this still will probablly result in 500 error status, see `/var/log/apache2/error.log` for details.
