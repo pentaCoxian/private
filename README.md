@@ -3,9 +3,9 @@
 For Topics in Web Engineering Final.
 This repo is for server side script and files for serving to client.
 The enviroment used was
-    - ubuntu 22.04 LTS
-    - Apache/2.4.52
-    - Python 3.10.4
+- ubuntu 22.04 LTS
+- Apache/2.4.52
+- Python 3.10.4
 
 ## INSTALL
 
